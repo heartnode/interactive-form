@@ -534,6 +534,10 @@ button:hover {
     padding: 0;
   }
 
+  .hide{
+    display:none;
+  }
+
   /* ================================= 
     768px - Activity section styles
   ==================================== */
