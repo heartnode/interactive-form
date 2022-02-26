@@ -93,9 +93,7 @@ function initRegisterForActivities(){
             }
 
         }
-        
-
-        
+ 
         //Calculate the Total cost of all the selected event
         let total = 0;
         for(let checked of checkedboxes){
@@ -111,6 +109,43 @@ function initRegisterForActivities(){
         
     });
 }
+/***
+ * Initalize the "Payment Info" section
+ */
+function initPaymentInfo(){
+    var payment = document.getElementById('payment');
+    
+    // Listen for payment type change events
+    payment.addEventListener('change',e=>{
+        // Hide the UI for all other payment type that is not the currently selected payment
+        let selectedPayment = e.target.value;
+        let hideOptions = payment.querySelectorAll('option:not([value="'+selectedPayment+'"]):not([hidden])');
+        for(let option of hideOptions){
+            let optValue = option.value;
+            document.getElementById(optValue).classList.add("hide");
+        }
+
+        //Show the UI of the selected payment type
+        document.getElementById(selectedPayment).classList.remove("hide");
+    });
+
+    //By default set payment to credit card during initial load of the UI
+    payment.querySelector('option[value="credit-card"]').selected = true;
+    let changeEvent = new Event('change');
+    payment.dispatchEvent(changeEvent);
+
+}
+/**
+ * Setup form validation
+ */
+function setupFormValidation(){
+    let form = document.querySelector('form');
+    form.addEventListener('submit',(e)=>{
+        console.log("Form submit");
+        e.preventDefault();
+    });
+}
+
 // Populate the page when is fully loaded and the DOM is ready,
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -120,5 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initJobRole();
     initTShirtInfo();
     initRegisterForActivities();
+    initPaymentInfo();
 
+    setupFormValidation();
 });
