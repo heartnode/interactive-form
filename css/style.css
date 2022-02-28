@@ -271,7 +271,7 @@ button:hover {
 
 .activities.valid::after,
 .activities.not-valid::after {
-  top: 5px;
+  top: -45px;
 }
 /* ================================= 
   Basic info and t shirt styles
@@ -478,6 +478,14 @@ button:hover {
   background: rgba(197, 163, 175, 0.1) !important;
 }
 
+.hide{
+  display:none;
+}
+
+.active{
+  display:inherit;
+}
+
 /* ================================= 
   Media queries styles
 ==================================== */
@@ -532,10 +540,6 @@ button:hover {
   .shirts {
     max-width: 325px;
     padding: 0;
-  }
-
-  .hide{
-    display:none;
   }
 
   /* ================================= 
