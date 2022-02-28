@@ -173,12 +173,12 @@ function updateValidity(field,validator){
 }
 
 /**
- * Validate the name is it consists of alphabets for first, middle (optional) and last name, all case insensitive.
+ * Validate the name is it consists of alphabets for first, middle or middle initial(optional) and last name(optional), all case insensitive.
  * @param {string} name 
  * @return {boolean} this returns either the input name is valid (true) or invalid (false)
  */
 function validateName(name){
-    return /^[a-z]+ ([a-z]* )?[a-z]+$/i.test(name.trim());
+    return /^[a-z]+( [a-z.]*)?( [a-z]+)?$/i.test(name.trim());
 }
 
 /**
