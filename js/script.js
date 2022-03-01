@@ -247,8 +247,8 @@ function setupRealtimeValidation(field,validator){
     if (field.tagName === 'INPUT' && ["text","email"].includes(field.getAttribute("type"))){    
         //Listen for user inputs the key event
         field.addEventListener('keyup',()=>{
-            // Make sure something have entered and not just whitespaces
-            if (field.value.trim() !== ''){
+            // Make sure something have entered
+            if (field.value !== ''){
                 //Perform validity check and updates the UI accordingly.
                 updateValidity(field,validator);
             }
