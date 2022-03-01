@@ -238,13 +238,31 @@ function validateCVV(cvv){
 }
 
 /**
+ * Setup real time validation for a given field
+ * @param {HTMLElement} field 
+ * @param {function} validator 
+ */
+function setupRealtimeValidation(field,validator){
+    //Making sure only input type of text or email works with the real time validation
+    if (field.tagName === 'INPUT' && ["text","email"].includes(field.getAttribute("type"))){    
+        //Listen for user inputs the key event
+        field.addEventListener('keyup',()=>{
+            // Make sure something have entered and not just whitespaces
+            if (field.value.trim() !== ''){
+                //Perform validity check and updates the UI accordingly.
+                updateValidity(field,validator);
+            }
+        });
+    }
+}
+/**
  * Setup form validation
  */
 function setupFormValidation(){
     let form = document.querySelector('form');
     let nameField = document.getElementById('name');
     let emailField = document.getElementById('email');
-
+    let activities = document.getElementById('activities');
     let paymentType = document.getElementById('payment');
     let ccnumField = document.getElementById('cc-num');
     let zipField = document.getElementById('zip');
@@ -252,6 +270,7 @@ function setupFormValidation(){
 
     //Enable validation check on form submission (i.e. when the user clicks on the Register button)
     form.addEventListener('submit',(e)=>{
+ 
         //Validate the Name field make sure is not empty or whitespaces only
         updateValidity(nameField,validateName);
 
@@ -282,6 +301,26 @@ function setupFormValidation(){
         if (document.querySelectorAll('.not-valid').length > 0)
             e.preventDefault();
     });
+
+    // Setup real time validation for name field
+    setupRealtimeValidation(nameField,validateName);
+
+    // Setup real time validation for email field
+    setupRealtimeValidation(emailField,validateEmail);
+
+    // Setup real time validation for activities
+    activities.addEventListener('change',(e)=>{
+        checkRegisteredActivities();
+    });
+
+    // Setup real time validation for credit card number field
+    setupRealtimeValidation(ccnumField,validateCCNum);
+
+    // Setup real time validation for zip code field
+    setupRealtimeValidation(zipField,validateCCZip);
+
+    // Setup real time validation for CVV field
+    setupRealtimeValidation(cvvField,validateCVV);
 }
 
 // Populate the page when is fully loaded and the DOM is ready,
