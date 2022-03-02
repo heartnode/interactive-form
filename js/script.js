@@ -155,8 +155,9 @@ function initPaymentInfo(){
  * Update the display of validity in the UI for the given input field base on the status is valid or not-valid.
  * @param {HTMLElement} field 
  * @param {function} validator 
+ * @param {function} hintFunc optional
  */
-function updateValidity(field,validator){
+function updateValidity(field,validator,hintFunc){
     // Perform validation check and determines the status
     let status = validator(field.value) ? 'valid' : 'not-valid';
 
@@ -169,6 +170,11 @@ function updateValidity(field,validator){
         field.parentNode.classList.remove('valid');
         field.parentNode.classList.add('not-valid');
         field.parentElement.lastElementChild.classList.add('active'); // hint
+    }
+
+    // Triggers the Hint Message function when is supplied with one
+    if (hintFunc !== undefined){
+        hintFunc();
     }
 }
 
@@ -241,15 +247,19 @@ function validateCVV(cvv){
  * Setup real time validation for a given field
  * @param {HTMLElement} field 
  * @param {function} validator 
+ * @param {function} hintFunc optional hint message function
  */
-function setupRealtimeValidation(field,validator){
+function setupRealtimeValidation(field,validator,hintFunc){
     //Making sure only input type of text or email works with the real time validation
     if (field.tagName === 'INPUT' && ["text","email"].includes(field.getAttribute("type"))){    
         //Listen for user inputs the key event
         field.addEventListener('keyup',(e)=>{
                 //Perform validity check and updates the UI accordingly.
-                if (e.key !== "Tab"){
+                if (e.key !== "Tab" && e.key !== "Shift"){
                     updateValidity(field,validator);
+                    if (hintFunc !== undefined){
+                        hintFunc();
+                    }
                 }
         });
     }
@@ -267,11 +277,20 @@ function setupFormValidation(){
     let zipField = document.getElementById('zip');
     let cvvField = document.getElementById('cvv');
 
+    //Exceeds Expectation: customized hint message for name field
+    const nameFieldHintFunc = ()=>{
+        if (nameField.value === ''){
+            nameField.parentElement.lastElementChild.textContent  = 'Name field cannot be blank';
+        } else {
+            nameField.parentElement.lastElementChild.textContent = 'Name field can only contains alphabets and space between first, middle and last name.';
+        }
+    };
+
     //Enable validation check on form submission (i.e. when the user clicks on the Register button)
     form.addEventListener('submit',(e)=>{
  
         //Validate the Name field make sure is not empty or whitespaces only
-        updateValidity(nameField,validateName);
+        updateValidity(nameField,validateName,nameFieldHintFunc);
 
         //Validate email field make sure is in account@domain.com format
         updateValidity(emailField,validateEmail);
@@ -302,7 +321,7 @@ function setupFormValidation(){
     });
 
     // Setup real time validation for name field
-    setupRealtimeValidation(nameField,validateName);
+    setupRealtimeValidation(nameField,validateName,nameFieldHintFunc);
 
     // Setup real time validation for email field
     setupRealtimeValidation(emailField,validateEmail);
