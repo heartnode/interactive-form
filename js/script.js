@@ -187,7 +187,7 @@ function validateName(name){
  * @return {boolean} this returns either the input email is valid (true) or invalid (false)
  */
 function validateEmail(email){
-    return /^[^@ ]+@[^@. ]+\.com$/i.test(email);
+    return /^[^@ ]+@[^@. ]+\.[a-z]+$/i.test(email);
 }
 
 /**
@@ -246,12 +246,11 @@ function setupRealtimeValidation(field,validator){
     //Making sure only input type of text or email works with the real time validation
     if (field.tagName === 'INPUT' && ["text","email"].includes(field.getAttribute("type"))){    
         //Listen for user inputs the key event
-        field.addEventListener('keyup',()=>{
-            // Make sure something have entered
-            if (field.value !== ''){
+        field.addEventListener('keyup',(e)=>{
                 //Perform validity check and updates the UI accordingly.
-                updateValidity(field,validator);
-            }
+                if (e.key !== "Tab"){
+                    updateValidity(field,validator);
+                }
         });
     }
 }
