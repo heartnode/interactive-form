@@ -257,6 +257,8 @@ function setupRealtimeValidation(field,validator,hintFunc){
                 //Perform validity check and updates the UI accordingly.
                 if (e.key !== "Tab" && e.key !== "Shift"){
                     updateValidity(field,validator);
+
+                    //If Hint function exists then call it.
                     if (hintFunc !== undefined){
                         hintFunc();
                     }
@@ -285,6 +287,17 @@ function setupFormValidation(){
             nameField.parentElement.lastElementChild.textContent = 'Name field can only contains alphabets and space between first, middle and last name.';
         }
     };
+    //Exceeds Expectation: customized hint message for email field
+    const emailFieldHintFunc = ()=>{
+        const emailHint = emailField.parentElement.lastElementChild;
+        if (emailField.value === ''){
+            emailHint.textContent = 'Email field cannot be blank';
+        } else if (!emailField.value.includes('@')){
+            emailHint.textContent = 'Email address must contain a single @.';
+        } else if (! /@[^@. ]+\.[a-z]+$/i.test(emailHint.value)){
+            emailHint.textContent = 'The domain portion of the email address is invalid (the portion after the @.)';
+        } 
+    };
 
     //Enable validation check on form submission (i.e. when the user clicks on the Register button)
     form.addEventListener('submit',(e)=>{
@@ -293,7 +306,7 @@ function setupFormValidation(){
         updateValidity(nameField,validateName,nameFieldHintFunc);
 
         //Validate email field make sure is in account@domain.com format
-        updateValidity(emailField,validateEmail);
+        updateValidity(emailField,validateEmail,emailFieldHintFunc);
         
         //Make sure at least one activities is checked
         checkRegisteredActivities();
@@ -324,7 +337,7 @@ function setupFormValidation(){
     setupRealtimeValidation(nameField,validateName,nameFieldHintFunc);
 
     // Setup real time validation for email field
-    setupRealtimeValidation(emailField,validateEmail);
+    setupRealtimeValidation(emailField,validateEmail,emailFieldHintFunc);
 
     // Setup real time validation for activities
     activities.addEventListener('change',(e)=>{
